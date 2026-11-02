@@ -18,7 +18,7 @@ nav button.active{color:var(--ink);border-bottom-color:var(--ink);font-weight:60
 nav button:hover{color:var(--ink)}
 main{position:relative;min-height:500px}
 .watermark{position:fixed;width:min(600px,94vw);height:76vh;object-fit:contain;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.12;pointer-events:none;z-index:0}
-section{position:relative;z-index:1}
+section{position:relative;z-index:1;touch-action:pan-y}
 h1{font-family:'Kaushan Script','Brush Script MT',cursive;font-size:clamp(35px,7.5vw,58px);font-weight:400;letter-spacing:-.025em;text-align:center;margin:25px 0 12px}
 h2{font-family:'DM Sans',Arial,sans-serif;font-size:13px;font-weight:600;letter-spacing:.17em;margin:32px 0 12px;text-transform:uppercase}
 .item{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid #c9b6a550}
@@ -36,7 +36,25 @@ button:focus-visible{outline:2px solid #a17a58;outline-offset:3px}
 @media(max-width:390px){.wrap{padding-left:16px;padding-right:16px}nav{gap:21px}.name{font-size:24px}.price{font-size:13px}}
 </style></head><body><div class="wrap"><header><img class="brand" src="Assets/zest-lettering.png" alt="ZEST"></header><nav id="nav" aria-label="Categorie del menu"></nav><main><img class="watermark" src="Assets/simbolo-nuovo.png" alt="" aria-hidden="true"><section id="content" aria-live="polite"></section></main><footer><div class="rule"></div><img class="smallbrand" src="Assets/zest-lettering.png" alt="ZEST"></footer></div><script src="menu.js"></script><script>
 const nav=document.getElementById('nav'),content=document.getElementById('content');const eur=n=>n.toLocaleString('it-IT',{style:'currency',currency:'EUR'});const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let current=0;
-function show(i){current=i;nav.querySelectorAll('button').forEach((b,j)=>{b.classList.toggle('active',i===j);b.setAttribute('aria-pressed',i===j)});const cat=MENU[i];let html=`<h1>${esc(cat.title)}</h1><div class="rule"></div>`;if(cat.groups){for(const group of cat.groups){html+=`<h2>${esc(group.name)}</h2>`;for(const it of group.items)html+=render(it)}}else for(const it of cat.items)html+=render(it);content.innerHTML=html;window.scrollTo({top:0,behavior:'smooth'})}
+function show(i){current=i;nav.querySelectorAll('button').forEach((b,j)=>{b.classList.toggle('active',i===j);b.setAttribute('aria-pressed',i===j)});const active=nav.querySelectorAll('button')[i];if(active)active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});const cat=MENU[i];let html=`<h1>${esc(cat.title)}</h1><div class="rule"></div>`;if(cat.groups){for(const group of cat.groups){html+=`<h2>${esc(group.name)}</h2>`;for(const it of group.items)html+=render(it)}}else for(const it of cat.items)html+=render(it);content.innerHTML=html;window.scrollTo({top:0,behavior:'smooth'})}
 function render(it){if(it.wine){let p=it.prices.map(v=>`<span>${esc(v.label)}: <strong>${eur(v.amount)}</strong></span>`).join('');return `<article class="wine"><div class="item"><strong class="name">${esc(it.name)}</strong></div><div class="detail">${esc(it.detail)}</div><div class="prices">${p}</div></article>`}return `<div class="item"><span class="name">${esc(it.name)}</span><span class="price">${eur(it.price)}</span></div>`}
+// Swipe solo nell'area dei prodotti: il movimento verticale resta nativo.
+let touchStartX=0,touchStartY=0,touchStartTime=0;
+content.addEventListener('touchstart',e=>{
+  if(e.touches.length!==1)return;
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
+  touchStartTime=Date.now();
+},{passive:true});
+content.addEventListener('touchend',e=>{
+  if(e.changedTouches.length!==1||!touchStartTime)return;
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  const dy=e.changedTouches[0].clientY-touchStartY;
+  const elapsed=Date.now()-touchStartTime;
+  touchStartTime=0;
+  if(elapsed>900||Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.4)return;
+  const next=current+(dx<0?1:-1);
+  if(next>=0&&next<MENU.length)show(next);
+},{passive:true});
 MENU.forEach((cat,i)=>{let b=document.createElement('button');b.textContent=cat.title;b.onclick=()=>show(i);nav.appendChild(b)});show(0);
 </script></body></html>
