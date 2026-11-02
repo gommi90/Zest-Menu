@@ -34,6 +34,22 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:55px}
 .smallbrand{width:145px;opacity:.8;margin:0 auto 12px;display:block}
 button:focus-visible{outline:2px solid #a17a58;outline-offset:3px}
 @media(max-width:390px){.wrap{padding-left:16px;padding-right:16px}nav{gap:21px}.name{font-size:24px}.price{font-size:13px}}
+h2{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  font-size:17px;
+  font-weight:700;
+  letter-spacing:.13em;
+  margin:38px 0 20px;
+}
+
+h2::after{
+  content:'';
+  height:2px;
+  flex:1;
+  background:#b7a18b;
+}
 </style></head><body><div class="wrap"><header><img class="brand" src="Assets/zest-lettering.png" alt="ZEST"></header><nav id="nav" aria-label="Categorie del menu"></nav><main><img class="watermark" src="Assets/simbolo-nuovo.png" alt="" aria-hidden="true"><section id="content" aria-live="polite"></section></main><footer><div class="rule"></div><img class="smallbrand" src="Assets/zest-lettering.png" alt="ZEST"></footer></div><script src="menu.js"></script><script>
 const nav=document.getElementById('nav'),content=document.getElementById('content');const eur=n=>n.toLocaleString('it-IT',{style:'currency',currency:'EUR'});const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let current=0;
 function show(i){current=i;nav.querySelectorAll('button').forEach((b,j)=>{b.classList.toggle('active',i===j);b.setAttribute('aria-pressed',i===j)});const active=nav.querySelectorAll('button')[i];if(active)active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});const cat=MENU[i];let html=`<h1>${esc(cat.title)}</h1><div class="rule"></div>`;if(cat.groups){for(const group of cat.groups){html+=`<h2>${esc(group.name)}</h2>`;for(const it of group.items)html+=render(it)}}else for(const it of cat.items)html+=render(it);content.innerHTML=html;window.scrollTo({top:0,behavior:'smooth'})}
