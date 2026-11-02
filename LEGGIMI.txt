@@ -1,0 +1,11 @@
+ZEST — MENU DIGITALE (PRIMA VERSIONE)
+
+1. Apri index.html nel browser per provare il menu.
+2. Per modificare prodotti e prezzi apri menu.js con un editor di testo.
+3. Per pubblicare gratuitamente su GitHub Pages, crea un repository pubblico, carica il contenuto di questa cartella nella radice del repository e attiva Settings > Pages > Deploy from a branch > main / root.
+4. Dopo la pubblicazione crea un QR code che punti all'URL pubblico. Non stampare il QR prima di aver verificato il sito online.
+
+Il sito non raccoglie dati personali e non utilizza servizi esterni. Le categorie Signature Cocktail e Distillati saranno aggiunte quando verranno forniti prodotti e prezzi.
+Verificare trascrizioni, disponibilità e prezzi prima della pubblicazione.
+
+Aggiornamento: titoli categorie con font Kaushan Script (approssimazione del brush script originale). Richiede connessione Internet per caricare il font da Google Fonts.
